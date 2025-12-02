@@ -60,9 +60,7 @@ const AddKnowledgeSchema = z.object({
 
 const SearchKnowledgeSchema = z.object({
   query: z.string().describe('Search query'),
-  category: z.enum(['faq', 'pricing', 'features', 'policies', 'troubleshooting', 'general'])
-    .optional()
-    .describe('Optional category filter'),
+  limit: z.number().optional().describe('Maximum number of results (default: 5)'),
 });
 
 // List available tools
@@ -241,7 +239,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case 'search_knowledge': {
         const parsed = SearchKnowledgeSchema.parse(args);
-        const result = await agent.searchKnowledgeBase(parsed.query, parsed.category);
+        const result = await agent.searchKnowledgeBase(parsed.query, parsed.limit || 5);
         return {
           content: [
             {

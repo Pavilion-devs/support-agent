@@ -74,7 +74,7 @@ export async function processTicket(
   addStep('retrieve_memory', 'Searching for customer history');
   let customerHistory = '';
   try {
-    customerHistory = await letta.getConversationContext(customerEmail);
+    customerHistory = await letta.getCustomerContext(customerEmail);
     addStep('memory_retrieved', customerHistory.includes('No previous') 
       ? 'New customer' 
       : 'Found customer history');
@@ -106,8 +106,9 @@ export async function processTicket(
   // Step 5: Store interaction in Letta for future reference
   addStep('store_memory', 'Saving to memory');
   try {
-    const summary = `${subject || 'Support ticket'}: ${classification.category} issue (${classification.urgency}). Resolution: ${responseResult.response.substring(0, 200)}...`;
-    await letta.storeMemory(customerEmail, summary, {
+    const summary = `Customer: ${customerEmail}\n${subject || 'Support ticket'}: ${classification.category} issue (${classification.urgency}). Resolution: ${responseResult.response.substring(0, 200)}...`;
+    await letta.storeMemory(summary, {
+      customer_email: customerEmail,
       classification: classification.category,
       urgency: classification.urgency,
       workspace_id: workspaceId,
@@ -160,7 +161,7 @@ export async function getCustomerInsights(email: string): Promise<{
   history: string;
   interaction_count: number;
 }> {
-  const history = await letta.getConversationContext(email);
+  const history = await letta.getCustomerContext(email);
   const isNew = history.includes('No previous');
   
   return {
@@ -184,8 +185,8 @@ export async function addKnowledge(doc: {
 /**
  * Search knowledge base
  */
-export async function searchKnowledgeBase(query: string, category?: string) {
-  return knowledge.searchKnowledge(query, category);
+export async function searchKnowledgeBase(query: string, limit?: number) {
+  return knowledge.searchKnowledge(query, limit);
 }
 
 /**

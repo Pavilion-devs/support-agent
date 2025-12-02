@@ -58,10 +58,13 @@ async function getAgentId(): Promise<string> {
   try {
     const agents = await lettaFetch('/v1/agents', { method: 'GET' });
     
-    if (agents && agents.length > 0) {
-      cachedAgentId = agents[0].id;
-      console.log(`Using Letta agent: ${cachedAgentId}`);
-      return cachedAgentId;
+    if (agents && Array.isArray(agents) && agents.length > 0 && agents[0]?.id) {
+      const agentId = agents[0].id;
+      if (typeof agentId === 'string') {
+        cachedAgentId = agentId;
+        console.log(`Using Letta agent: ${cachedAgentId}`);
+        return cachedAgentId;
+      }
     }
     
     throw new Error('No Letta agents available');

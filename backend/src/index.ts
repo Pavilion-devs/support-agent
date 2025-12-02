@@ -65,7 +65,7 @@ app.post('/mcp/tools', async (req, res) => {
             error: 'Missing required argument: message',
           });
         }
-        result = await agent.classifyOnly(args.message);
+        result = await agent.classifyMessage(args.message);
         break;
 
       case 'get_customer_insights':

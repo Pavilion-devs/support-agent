@@ -61,7 +61,7 @@ export async function processTicket(
   let customerContext = '';
   try {
     // First try Letta
-    const lettaContext = await letta.getConversationContext(customerEmail);
+    const lettaContext = await letta.getCustomerContext(customerEmail);
     
     // Also get local ticket history
     const allTickets = db.getAllTickets(100);
@@ -149,12 +149,14 @@ export async function processTicket(
       customerContext !== 'This appears to be a new customer with no previous interactions.' ? customerContext : undefined
     );
 
-    await letta.storeConversationSummary(
-      ticketId,
-      customerEmail,
-      insightSummary,
-      classification.category,
-      responseResult.response.substring(0, 500)
+    await letta.storeMemory(
+      `Ticket: ${ticketId}\nCustomer: ${customerEmail}\nCategory: ${classification.category}\nSummary: ${insightSummary}\nResolution: ${responseResult.response.substring(0, 500)}`,
+      {
+        type: 'customer_interaction',
+        customer: customerEmail,
+        ticket_id: ticketId,
+        classification: classification.category,
+      }
     );
     addStep('store_memory', 'completed', 'Customer insights stored for future interactions');
   } catch (error) {
@@ -200,7 +202,7 @@ export async function getCustomerInsights(email: string): Promise<{
   ticketHistory: db.Ticket[];
 }> {
   const local = db.getCustomerInsight(email) || null;
-  const memories = await letta.getConversationContext(email);
+  const memories = await letta.getCustomerContext(email);
   
   // Get ticket history from local DB
   const allTickets = db.getAllTickets(100);
