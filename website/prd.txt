@@ -1,0 +1,142 @@
+Perfect ✅ — I see this layout now. It’s structured like a **modern B2B SaaS landing page** (dark mode, boxed sections, clear pricing, testimonials). We can replicate this exact structure for **Twisky** but swap in **AI support platform content**.
+
+Here’s the **adapted Twisky landing page content (section by section):**
+
+---
+
+## **Hero Section**
+
+**Headline:**
+*"Customer support, reinvented for B2B"*
+
+**Subheadline:**
+*Resolve customer issues faster with AI agents. Automate support across Slack, WhatsApp, and Email — all in one platform.*
+
+**CTA buttons:**
+👉 \[Get Early Access]
+👉 \[Book Demo]
+
+**Mini text:**
+*Trusted by fast-growing teams to scale customer success with less effort.*
+
+---
+
+## **Product Preview (like "Transactions" box)**
+
+Instead of financial transactions, we show support activity.
+**Tabs:**
+
+* Conversations
+* Knowledge Base
+* Escalations
+
+**Cards example:**
+
+* **Conversation:** *“Customer asked: How do I set up SOC 2 compliance?” → Resolved by AI in 12s.*
+* **Escalation:** *“Customer asked about advanced vulnerability scanning → Escalated to Slack.”*
+* **Knowledge:** *“Updated docs: Pricing & Billing FAQs.”*
+
+---
+
+## **Everything Your Business Needs (Feature Grid)**
+
+**AI-Powered Support**
+Automate repetitive support questions with instant, accurate answers.
+
+**Smart Escalations**
+Seamlessly route complex issues to your team inside Slack.
+
+**Conversation Summaries**
+Every escalation includes a full summary so your team can pick up instantly.
+
+**Omnichannel by Default**
+One AI engine across Slack, WhatsApp, Email, and Web.
+
+**Knowledge Sync**
+Keep support accurate by syncing FAQs, Docs, and Policies from Google Docs.
+
+**Analytics & Insights**
+Track resolutions, escalations, and response speed to improve support ROI.
+
+---
+
+## **Testimonials (Trusted by Teams Worldwide)**
+
+⭐️⭐️⭐️⭐️⭐️
+*"Twisky reduced our ticket volume by 60% within the first month. The Slack integration is a game-changer."*
+– Sarah K, Customer Success Manager
+
+⭐️⭐️⭐️⭐️⭐️
+*"Our AI agent now handles 70% of all support conversations. My team focuses only on complex customer needs."*
+– David L, Head of Support
+
+---
+
+## **Transparent Pricing (3 Tiers)**
+
+**Starter – Free**
+🚀 Perfect for startups testing AI support
+
+* 100 AI responses / month
+* Slack + Email channel
+* 1 knowledge source
+* Escalation to Slack
+
+👉 \[Get Started]
+
+**Pro – \$99 / month**
+⚡ For scaling teams automating daily support
+
+* Unlimited AI responses
+* Slack, Email, WhatsApp support
+* 5 knowledge sources
+* Conversation summaries
+* Priority support
+
+👉 \[Start Free Trial]
+
+**Enterprise – Custom**
+🏢 For large B2B companies
+
+* Unlimited channels & responses
+* Custom integrations
+* Advanced analytics
+* Dedicated support manager
+* SOC 2 + GDPR compliance
+
+👉 \[Contact Sales]
+
+---
+
+## **Security & Trust**
+
+🔒 Enterprise-grade encryption
+✅ GDPR & SOC 2 ready
+⚡ Built for B2B compliance
+
+---
+
+## **Final CTA Section**
+
+**Want faster, smarter support?**
+*Let Twisky handle customer issues while your team focuses on growth.*
+
+👉 \[Get Early Access]
+
+---
+
+## **Footer**
+
+* Product: Features, Pricing, Integrations, Docs
+* Company: About, Careers, Blog, Security
+* Resources: Help Center, Community, API
+
+---
+
+### 🔥 Key Additions I recommend beyond the template:
+
+1. **Integrations Section** → show Slack, WhatsApp, Gmail, Zoom icons (build trust instantly).
+
+---
+
+👉 Question: Do you want me to **turn this into a ready-to-use Next.js + Tailwind landing page template (dark mode, like the screenshot)** so you can deploy on Vercel immediately, or should I just finalize the **copywriting text** so you paste into Webflow/Framer?
