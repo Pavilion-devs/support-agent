@@ -180,8 +180,8 @@ const Header = () => {
             <Sun size={18} className={`${!isDarkMode ? 'text-primary' : 'text-muted-foreground'}`} />
           </div>
           <div className="rounded-2xl">
-            <Link to="/login">
-              <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-muted">Log in</Button>
+            <Link to="/dashboard/create">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">Create Ticket</Button>
             </Link>
           </div>
         </div>

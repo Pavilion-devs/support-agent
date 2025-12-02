@@ -151,10 +151,10 @@ const HeroSection = () => {
               </span>
             </Button>
           </Link>
-          <Link to="/book-demo">
+          <Link to="/dashboard/create">
             <Button variant="outline" className="group border-border text-foreground hover:bg-primary/10 hover:border-primary hover:text-primary text-base h-12 px-8 transition-all duration-300 hover:scale-105 hover:shadow-lg">
               <span className="flex items-center gap-2">
-                Book Demo
+                Create Ticket
                 <div className="w-4 h-4 rounded-full border-2 border-current group-hover:animate-spin transition-all duration-300"></div>
               </span>
             </Button>
