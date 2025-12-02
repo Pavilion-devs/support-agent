@@ -29,6 +29,98 @@ app.use((req, res, next) => {
 // API routes
 app.use('/api', apiRoutes);
 
+// MCP SSE Endpoint - Verisense connects here
+app.get('/mcp', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Cache-Control');
+
+  res.write(': connected\n\n');
+  
+  const tools = {
+    jsonrpc: '2.0',
+    id: null,
+    result: {
+      tools: [
+        {
+          name: 'process_support_ticket',
+          description: 'Full AI pipeline: classify message, search knowledge, generate response',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              message: { type: 'string', description: 'Customer support message' },
+              customer_email: { type: 'string', description: 'Customer email address' },
+              subject: { type: 'string', description: 'Optional subject line' },
+            },
+            required: ['message', 'customer_email'],
+          },
+        },
+        {
+          name: 'classify_message',
+          description: 'Classify a support message without generating response',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              message: { type: 'string', description: 'Message to classify' },
+            },
+            required: ['message'],
+          },
+        },
+        {
+          name: 'get_customer_insights',
+          description: 'Get customer history and context from Letta Memory',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              email: { type: 'string', description: 'Customer email address' },
+            },
+            required: ['email'],
+          },
+        },
+        {
+          name: 'add_knowledge',
+          description: 'Add product documentation to knowledge base',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              title: { type: 'string' },
+              content: { type: 'string' },
+              category: { type: 'string', enum: ['faq', 'pricing', 'features', 'policies', 'troubleshooting', 'general'] },
+              tags: { type: 'array', items: { type: 'string' } },
+            },
+            required: ['title', 'content', 'category'],
+          },
+        },
+        {
+          name: 'search_knowledge',
+          description: 'Search product knowledge base',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              query: { type: 'string' },
+              limit: { type: 'number' },
+            },
+            required: ['query'],
+          },
+        },
+      ],
+    },
+  };
+  
+  res.write(`data: ${JSON.stringify(tools)}\n\n`);
+  
+  const keepAlive = setInterval(() => {
+    res.write(': keepalive\n\n');
+  }, 30000);
+
+  req.on('close', () => {
+    clearInterval(keepAlive);
+    res.end();
+  });
+});
+
 // MCP HTTP Endpoints for Verisense Network
 app.post('/mcp/tools', async (req, res) => {
   try {
@@ -132,7 +224,105 @@ app.post('/mcp/tools', async (req, res) => {
 });
 
 // List available MCP tools
+// Returns SSE if Accept header includes text/event-stream (for Verisense)
+// Otherwise returns JSON (for testing)
 app.get('/mcp/tools', (req, res) => {
+  const acceptsSSE = req.headers.accept?.includes('text/event-stream');
+  
+  if (acceptsSSE) {
+    // Return SSE for Verisense
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Cache-Control');
+
+    res.write(': connected\n\n');
+    
+    const tools = {
+      jsonrpc: '2.0',
+      id: null,
+      result: {
+        tools: [
+          {
+            name: 'process_support_ticket',
+            description: 'Full AI pipeline: classify message, search knowledge, generate response',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                message: { type: 'string', description: 'Customer support message' },
+                customer_email: { type: 'string', description: 'Customer email address' },
+                subject: { type: 'string', description: 'Optional subject line' },
+              },
+              required: ['message', 'customer_email'],
+            },
+          },
+          {
+            name: 'classify_message',
+            description: 'Classify a support message without generating response',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                message: { type: 'string', description: 'Message to classify' },
+              },
+              required: ['message'],
+            },
+          },
+          {
+            name: 'get_customer_insights',
+            description: 'Get customer history and context from Letta Memory',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                email: { type: 'string', description: 'Customer email address' },
+              },
+              required: ['email'],
+            },
+          },
+          {
+            name: 'add_knowledge',
+            description: 'Add product documentation to knowledge base',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                title: { type: 'string' },
+                content: { type: 'string' },
+                category: { type: 'string', enum: ['faq', 'pricing', 'features', 'policies', 'troubleshooting', 'general'] },
+                tags: { type: 'array', items: { type: 'string' } },
+              },
+              required: ['title', 'content', 'category'],
+            },
+          },
+          {
+            name: 'search_knowledge',
+            description: 'Search product knowledge base',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                query: { type: 'string' },
+                limit: { type: 'number' },
+              },
+              required: ['query'],
+            },
+          },
+        ],
+      },
+    };
+    
+    res.write(`data: ${JSON.stringify(tools)}\n\n`);
+    
+    const keepAlive = setInterval(() => {
+      res.write(': keepalive\n\n');
+    }, 30000);
+
+    req.on('close', () => {
+      clearInterval(keepAlive);
+      res.end();
+    });
+    return;
+  }
+  
+  // Return JSON for regular requests
   res.json({
     success: true,
     tools: [
@@ -179,6 +369,111 @@ app.get('/mcp/tools', (req, res) => {
       },
     ],
   });
+});
+
+// MCP SSE Endpoint for Verisense (Server-Sent Events)
+// Verisense expects GET /mcp/tools to return text/event-stream
+app.get('/mcp/tools', (req, res, next) => {
+  // Check if client accepts SSE
+  const acceptsSSE = req.headers.accept?.includes('text/event-stream');
+  
+  if (acceptsSSE) {
+    // Return SSE format for Verisense
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Cache-Control');
+
+    // Send initial connection
+    res.write(': connected\n\n');
+    
+    // Send tools list as SSE data
+    const tools = {
+      jsonrpc: '2.0',
+      id: null,
+      result: {
+        tools: [
+          {
+            name: 'process_support_ticket',
+            description: 'Full AI pipeline: classify message, search knowledge, generate response',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                message: { type: 'string', description: 'Customer support message' },
+                customer_email: { type: 'string', description: 'Customer email address' },
+                subject: { type: 'string', description: 'Optional subject line' },
+              },
+              required: ['message', 'customer_email'],
+            },
+          },
+          {
+            name: 'classify_message',
+            description: 'Classify a support message without generating response',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                message: { type: 'string', description: 'Message to classify' },
+              },
+              required: ['message'],
+            },
+          },
+          {
+            name: 'get_customer_insights',
+            description: 'Get customer history and context from Letta Memory',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                email: { type: 'string', description: 'Customer email address' },
+              },
+              required: ['email'],
+            },
+          },
+          {
+            name: 'add_knowledge',
+            description: 'Add product documentation to knowledge base',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                title: { type: 'string' },
+                content: { type: 'string' },
+                category: { type: 'string', enum: ['faq', 'pricing', 'features', 'policies', 'troubleshooting', 'general'] },
+                tags: { type: 'array', items: { type: 'string' } },
+              },
+              required: ['title', 'content', 'category'],
+            },
+          },
+          {
+            name: 'search_knowledge',
+            description: 'Search product knowledge base',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                query: { type: 'string' },
+                limit: { type: 'number' },
+              },
+              required: ['query'],
+            },
+          },
+        ],
+      },
+    };
+    
+    res.write(`data: ${JSON.stringify(tools)}\n\n`);
+    
+    // Keep connection alive
+    const keepAlive = setInterval(() => {
+      res.write(': keepalive\n\n');
+    }, 30000);
+
+    req.on('close', () => {
+      clearInterval(keepAlive);
+      res.end();
+    });
+  } else {
+    // Return JSON for regular requests (testing)
+    next();
+  }
 });
 
 // Root endpoint
